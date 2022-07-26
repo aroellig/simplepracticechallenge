@@ -8,7 +8,8 @@ services:
       POSTGRES_PASSWORD: 'password'
     volumes:
       - 'db:/var/lib/postgresql/data'
-
+ 
+  
   app:
     image: simplepractice_test:development
     build: .
@@ -16,9 +17,10 @@ services:
       - .:/app
     depends_on:
       - db
-    # expose ports
     ports:
       - "3000:3000"
 
 volumes:
   db:
+
+
