@@ -41,5 +41,17 @@ class Api::AppointmentsController < ApplicationController
 
   def create
     # TODO:
+    appointment = Appointment.new(appointment_params)
+    if appointment.save
+      render json: {message: 'success'}
+    else
+      render json: appointment.errors.full_messages, status: 422
+    end
+  end
+
+  private
+
+  def appointment_params 
+    params.permit(:patient, :doctor, :start_time, :duration_in_minutes)
   end
 end
