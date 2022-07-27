@@ -5,20 +5,20 @@
 #   - Each appointment should be 50 minutes in duration
 
 require 'faker'
-Doctor.delete_all
-Patient.delete_all
-Appointment.delete_all
+
 
 10.times do |index|
     Doctor.create!(
                   name: Faker::Name.name)            
   end
 
+
   10.times do |index|
     Patient.create!(
                   name: Faker::Name.name,
                   doctor_id: 1)            
   end
+
   10.times do |index|
     Patient.create!(
                   name: Faker::Name.name,
