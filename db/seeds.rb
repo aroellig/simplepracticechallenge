@@ -12,6 +12,7 @@ require 'faker'
                   name: Faker::Name.name)            
   end
 
+  Doctor.create!(name: 'Bob')
 
   10.times do |index|
     Patient.create!(

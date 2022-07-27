@@ -35,8 +35,8 @@ class Api::AppointmentsController < ApplicationController
     render json: {data: appointmentList}
     # TODO: return filtered values
     # head :ok
-  appointments = Appointment.where("created_at > Time.now")
-  appointments = Appointment.where("created_at < Time.now")
+  # appointments = Appointment.where("created_at > Time.now")
+  # appointments = Appointment.where("created_at < Time.now")
   end
 
   def create
