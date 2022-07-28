@@ -14,6 +14,7 @@ require 'faker'
 
   Doctor.create!(name: 'Bob')
 
+
   10.times do |index|
     Patient.create!(
                   name: Faker::Name.name,

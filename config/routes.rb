@@ -4,5 +4,7 @@ Rails.application.routes.draw do
   namespace :api do
     resources :appointments, only: [:index, :create]
     resource :doctors
+
+   
   end
 end
