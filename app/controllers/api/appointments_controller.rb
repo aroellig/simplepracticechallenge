@@ -1,79 +1,103 @@
 class Api::AppointmentsController < ApplicationController
   def index
 
-    if params["past"] == "1"
-      appointments = Appointment.where(:start_time < Date.today)
    
+    appointments = Appointment.all
     doctors = Doctor.all
     patients = Patient.all
     appointmentList = [];
-
-    appointments.each do |appointment|
-          appointmentObj = {
-      id: '',
-      patient:  '' ,
-      doctor:  { name: '', id: '' },
-      created_at: '',
-      start_time: '',
-      duration_in_minutes: ''
-    }
-      appointmentObj["id"] = appointment.id
-      appointmentObj["created_at"] = appointment.created_at
-      appointmentObj["start_time"] = appointment.start_time
-      appointmentObj["duration_in_minutes"] = appointment.duration_in_minutes
-        doctors.each do |doctor|
-          if doctor.id == appointment.doctor_id
-            appointmentObj["doctor"] = { name: doctor.name, id: doctor.id }
+    if params["past"] == "1"
+      appointments.each do |appointment| 
+        if (appointment.start_time.past?)
+            appointmentObj = {
+        id: '',
+        patient:  '' ,
+        doctor:  { name: '', id: '' },
+        created_at: '',
+        start_time: '',
+        duration_in_minutes: ''
+      }
+        appointmentObj["id"] = appointment.id
+        appointmentObj["created_at"] = appointment.created_at
+        appointmentObj["start_time"] = appointment.start_time
+        appointmentObj["duration_in_minutes"] = appointment.duration_in_minutes
+          doctors.each do |doctor|
+            if doctor.id == appointment.doctor_id
+              appointmentObj["doctor"] = { name: doctor.name, id: doctor.id }
+            end
           end
-        end
-
-        patients.each do |patient|
-          if patient.id == appointment.patient_id
-            appointmentObj["patient"] = {name: patient.name}
+  
+          patients.each do |patient|
+            if patient.id == appointment.patient_id
+              appointmentObj["patient"] = {name: patient.name}
+            end
           end
-        end
-      appointmentList.push(appointmentObj)
+        appointmentList.push(appointmentObj)
+        end 
+      end
+    elsif params["past"] == "0"
+      appointments.each do |appointment| 
+        if (!appointment.start_time.past?)
+            appointmentObj = {
+        id: '',
+        patient:  '' ,
+        doctor:  { name: '', id: '' },
+        created_at: '',
+        start_time: '',
+        duration_in_minutes: ''
+      }
+        appointmentObj["id"] = appointment.id
+        appointmentObj["created_at"] = appointment.created_at
+        appointmentObj["start_time"] = appointment.start_time
+        appointmentObj["duration_in_minutes"] = appointment.duration_in_minutes
+          doctors.each do |doctor|
+            if doctor.id == appointment.doctor_id
+              appointmentObj["doctor"] = { name: doctor.name, id: doctor.id }
+            end
+          end
+  
+          patients.each do |patient|
+            if patient.id == appointment.patient_id
+              appointmentObj["patient"] = {name: patient.name}
+            end
+          end
+        appointmentList.push(appointmentObj)
+        end 
+      end
+    elsif params["page"] != nil
+      last = (params["page"].to_i * params["length"].to_i) - 1
+      first = (last - params["length"].to_i) + 1
+      appointments[first..last].each do |appointment| 
+        
+            appointmentObj = {
+        id: '',
+        patient:  '' ,
+        doctor:  { name: '', id: '' },
+        created_at: '',
+        start_time: '',
+        duration_in_minutes: ''
+      }
+        appointmentObj["id"] = appointment.id
+        appointmentObj["created_at"] = appointment.created_at
+        appointmentObj["start_time"] = appointment.start_time
+        appointmentObj["duration_in_minutes"] = appointment.duration_in_minutes
+          doctors.each do |doctor|
+            if doctor.id == appointment.doctor_id
+              appointmentObj["doctor"] = { name: doctor.name, id: doctor.id }
+            end
+          end
+  
+          patients.each do |patient|
+            if patient.id == appointment.patient_id
+              appointmentObj["patient"] = {name: patient.name}
+            end
+          end
+        appointmentList.push(appointmentObj)
+        end 
     end
-    render json: {data: appointmentList}
-    end
-    # render json: {data: params}
-    # TODO: return all values
-    # appointments = Appointment.all
-    # doctors = Doctor.all
-    # patients = Patient.all
-    # appointmentList = [];
 
-    # appointments.each do |appointment|
-    #       appointmentObj = {
-    #   id: '',
-    #   patient:  '' ,
-    #   doctor:  { name: '', id: '' },
-    #   created_at: '',
-    #   start_time: '',
-    #   duration_in_minutes: ''
-    # }
-    #   appointmentObj["id"] = appointment.id
-    #   appointmentObj["created_at"] = appointment.created_at
-    #   appointmentObj["start_time"] = appointment.start_time
-    #   appointmentObj["duration_in_minutes"] = appointment.duration_in_minutes
-    #     doctors.each do |doctor|
-    #       if doctor.id == appointment.doctor_id
-    #         appointmentObj["doctor"] = { name: doctor.name, id: doctor.id }
-    #       end
-    #     end
+     render json: {data: appointmentList}
 
-    #     patients.each do |patient|
-    #       if patient.id == appointment.patient_id
-    #         appointmentObj["patient"] = {name: patient.name}
-    #       end
-    #     end
-    #   appointmentList.push(appointmentObj)
-    # end
-    # render json: {data: appointmentList}
-    # TODO: return filtered values
-    # head :ok
-  # appointments = Appointment.where("created_at > Time.now")
-  # appointments = Appointment.where("created_at < Time.now")
   end
 
   def create

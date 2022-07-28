@@ -14,6 +14,13 @@ require 'faker'
 
   Doctor.create!(name: 'Bob')
 
+  Doctor.all.each do |doctor|
+    10.times do |index|
+        Patient.create!(
+                      name: Faker::Name.name,
+                      doctor_id: doctor.id)            
+      end
+  end
 
   10.times do |index|
     Patient.create!(
