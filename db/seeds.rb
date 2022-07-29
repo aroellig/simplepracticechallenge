@@ -12,7 +12,7 @@ require 'faker'
                   name: Faker::Name.name)            
   end
 
-  Doctor.create!(name: 'Bob')
+ 
 
   Doctor.all.each do |doctor|
     10.times do |index|
@@ -35,7 +35,7 @@ require 'faker'
   Patient.all.each do |patient|
     5.times do |index|
         Appointment.create!(
-                    patient_id: patient.id,
+                patient_id: patient.id,
                   doctor_id: patient.doctor_id,
                   duration_in_minutes: 50,
                   start_time: Faker::Date.forward(days: 14))

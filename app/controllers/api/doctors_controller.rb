@@ -1,15 +1,16 @@
 class Api::DoctorsController < ApplicationController
 def show
 doctors = Doctor.all
+doctorsArr = doctors.map(&:clone)
 appointments = Appointment.all
 appointments.each do |appointment|
-doctors.each do |doctor|
+doctorsArr.each do |doctor|
 if doctor.id == appointment.doctor_id
-    doctors.delete(doctor)
+    doctorsArr.delete(doctor)
 end
 end
 end
-if doctors.length != 0
+if doctorsArr.length != 0
 render json: {data: doctors}
 else 
 render json: {message: 'all our doctors are fully booked'}
