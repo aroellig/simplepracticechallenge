@@ -9,6 +9,10 @@ if doctor.id == appointment.doctor_id
 end
 end
 end
+if doctors.length != 0
 render json: {data: doctors}
+else 
+render json: {message: 'all our doctors are fully booked'}
+end
 end
 end

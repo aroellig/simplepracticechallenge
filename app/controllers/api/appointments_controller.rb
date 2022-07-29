@@ -6,7 +6,8 @@ class Api::AppointmentsController < ApplicationController
     doctors = Doctor.all
     patients = Patient.all
     appointmentList = [];
-    if params["past"] == "1"
+
+    if params["past"].to_i == 1
       appointments.each do |appointment| 
         if (appointment.start_time.past?)
             appointmentObj = {
@@ -98,9 +99,8 @@ class Api::AppointmentsController < ApplicationController
 
   else
 
-    appointments.each do |appointment| 
-        
-      appointmentObj = {
+  appointments.each do |appointment| 
+  appointmentObj = {
   id: '',
   patient:  '' ,
   doctor:  { name: '', id: '' },
@@ -133,9 +133,20 @@ end
 
   def create
     # TODO:
-    appointment = Appointment.new(appointment_params)
+  appointment = Appointment.new(appointment_params)
+  appointmentObj = {
+  patient: '',
+  doctor: '',
+  start_time: '',
+  duration_in_minutes: 50
+  }
+  doctors = Doctor.all
+  patients = Patient.all
     if appointment.save
-      render json: {message: 'success'}
+      appointmentObj['start_time'] = appointment.start_time
+      appointmentObj["doctor"] = { id: appointment.doctor_id}
+      appointmentObj["patient"] = {name: patients[patient_id].name}
+      render json: {message: 'success', data: appointmentObj}
     else
       render json: appointment.errors.full_messages, status: 422
     end
@@ -144,6 +155,6 @@ end
   private
 
   def appointment_params 
-    params.permit(:patient, :doctor, :start_time, :duration_in_minutes)
+    params.permit(:patient_id, :doctor_id, :start_time, :duration_in_minutes)
   end
 end
