@@ -12,15 +12,25 @@ docker-compose run --rm -e RAILS_ENV=test app bundle exec rails db:migrate
 docker-compose up -d
 ```
 you can then go to your localhost in browser or whatever other program you wish to test it. I used my browser and the http vs code extension to test my routes
+```
 requirement 1: code for seeds can be found in the db/seeds.rb rile
+```
+```
 requirement 2: enter localhost:3000/api/appointments as a GET request 
+```
+```
 requirement 3: enter localhost:3000/api/appointments and then add the following tags at the end as a GET request
 ?past=1
 ?past=0
 ?length=5&page=1
+```
+```
 requirement 4:localhost:3000/api/doctors as a GET request 
-requirement 5L localhost:3000/api/appointments as a POST request 
+```
+```
+requirement 5: localhost:3000/api/appointments as a POST request 
 below are images from my test to show my results from each one
+```
 
 SimplePractice Programming Test
 =======================
