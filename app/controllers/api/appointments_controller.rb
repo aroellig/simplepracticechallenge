@@ -2,15 +2,46 @@ class Api::AppointmentsController < ApplicationController
   def index
 
 
-@appointment = Appointment.new
-    appointments = Appointment.all
-    doctors = Doctor.all
-    patients = Patient.all
-    appointmentList = [];
 
-    if params["past"].to_i == 1
-      appointments.each do |appointment| 
-        if (appointment.start_time.past?)
+    appointments = Appointment.all # selects appointents array
+    doctors = Doctor.all #selects doctors array
+    patients = Patient.all # selects patients array
+    appointmentList = []; #emplty array to hold appointments to be displayed
+
+    if params["past"].to_i == 1 #checks for a query param that is equal to "1"
+      appointments.each do |appointment| #iterates over appointments array so that each individual appointment can be selected
+        if (appointment.start_time.past?) #checks if the appointment's start time is in the past and if so the next step of code is performed
+            appointmentObj = { #creates appointment object to hold the proper info as specified in the requirements for this challenge
+        id: '',
+        patient:  '' ,
+        doctor:  { name: '', id: '' },
+        created_at: '',
+        start_time: '',
+        duration_in_minutes: ''
+      }
+      #lines 23-26 set the appointObj info to that of the selected appointment
+        appointmentObj["id"] = appointment.id 
+        appointmentObj["created_at"] = appointment.created_at
+        appointmentObj["start_time"] = appointment.start_time
+        appointmentObj["duration_in_minutes"] = appointment.duration_in_minutes
+          doctors.each do |doctor| #iterates over doctors array
+            if doctor.id == appointment.doctor_id #checks if the current doctor's id is the same as the appointment's doctor id and if so then the next line of code is performed
+              appointmentObj["doctor"] = { name: doctor.name, id: doctor.id } # sets the appointmentOBj doctor info to that of the specified doctor
+            end
+          end
+  
+          patients.each do |patient| #iterated over patients array
+            if patient.id == appointment.patient_id#checks if the current patient's id is the same as the appointment's doctor id and if so then the next line of code is performed
+              appointmentObj["patient"] = {name: patient.name}# sets the appointmentOBj patient info to that of the specified patient
+            end
+          end
+        appointmentList.push(appointmentObj) # adds the appointment obj to the appointmentList
+        end 
+      end
+    elsif params["past"] == "0" #checks for a query param equal to 0
+      appointments.each do |appointment| #iterates over each appointment
+        if (!appointment.start_time.past?) #checks if each appointments start time was not the past and if so the following code is performed
+          #lines 45-70 are the same as lines 14-39 as the code is the same and functions the same way, please refer above for a description of what each line does
             appointmentObj = {
         id: '',
         patient:  '' ,
@@ -37,40 +68,11 @@ class Api::AppointmentsController < ApplicationController
         appointmentList.push(appointmentObj)
         end 
       end
-    elsif params["past"] == "0"
-      appointments.each do |appointment| 
-        if (!appointment.start_time.past?)
-            appointmentObj = {
-        id: '',
-        patient:  '' ,
-        doctor:  { name: '', id: '' },
-        created_at: '',
-        start_time: '',
-        duration_in_minutes: ''
-      }
-        appointmentObj["id"] = appointment.id
-        appointmentObj["created_at"] = appointment.created_at
-        appointmentObj["start_time"] = appointment.start_time
-        appointmentObj["duration_in_minutes"] = appointment.duration_in_minutes
-          doctors.each do |doctor|
-            if doctor.id == appointment.doctor_id
-              appointmentObj["doctor"] = { name: doctor.name, id: doctor.id }
-            end
-          end
-  
-          patients.each do |patient|
-            if patient.id == appointment.patient_id
-              appointmentObj["patient"] = {name: patient.name}
-            end
-          end
-        appointmentList.push(appointmentObj)
-        end 
-      end
-    elsif params["page"] != nil
-      last = (params["page"].to_i * params["length"].to_i) - 1
-      first = (last - params["length"].to_i) + 1
-      appointments[first..last].each do |appointment| 
-        
+    elsif params["page"] != nil #checks for pagination to see in a page query param exist and if so the following code is performed
+      last = (params["page"].to_i * params["length"].to_i) - 1 #sets the last index of appointments user wants
+      first = (last - params["length"].to_i) + 1 #sets the first index of appointments user wants to see
+      appointments[first..last].each do |appointment| #selects appointments from the first index to the last index
+        #lines 76 - 100 are the same as lines 14-39 as the code is the same and functions the same way, please refer above for a description of what each line does
             appointmentObj = {
         id: '',
         patient:  '' ,
@@ -98,67 +100,67 @@ class Api::AppointmentsController < ApplicationController
         end 
    
 
-  else
+      else
+        # assumes no query params so user wants a list of all 100 appoinments
+        #the following code functions the same as lines 14-39 please refer above to see what each line does
+        appointments.each do |appointment| 
+          appointmentObj = {
+          id: '',
+          patient:  '' ,
+          doctor:  { name: '', id: '' },
+          created_at: '',
+          start_time: '',
+          duration_in_minutes: ''
+        }
+            appointmentObj["id"] = appointment.id
+            appointmentObj["created_at"] = appointment.created_at
+            appointmentObj["start_time"] = appointment.start_time
+            appointmentObj["duration_in_minutes"] = appointment.duration_in_minutes
+              doctors.each do |doctor|
+                if doctor.id == appointment.doctor_id
+                  appointmentObj["doctor"] = { name: doctor.name, id: doctor.id }
+                end
+              end
 
-  appointments.each do |appointment| 
-  appointmentObj = {
-  id: '',
-  patient:  '' ,
-  doctor:  { name: '', id: '' },
-  created_at: '',
-  start_time: '',
-  duration_in_minutes: ''
-}
-  appointmentObj["id"] = appointment.id
-  appointmentObj["created_at"] = appointment.created_at
-  appointmentObj["start_time"] = appointment.start_time
-  appointmentObj["duration_in_minutes"] = appointment.duration_in_minutes
-    doctors.each do |doctor|
-      if doctor.id == appointment.doctor_id
-        appointmentObj["doctor"] = { name: doctor.name, id: doctor.id }
+              patients.each do |patient|
+                if patient.id == appointment.patient_id
+                  appointmentObj["patient"] = {name: patient.name}
+                end
+              end
+            appointmentList.push(appointmentObj)
+            end 
+          end
+
+              render json: {data: appointmentList}
+
       end
-    end
-
-    patients.each do |patient|
-      if patient.id == appointment.patient_id
-        appointmentObj["patient"] = {name: patient.name}
-      end
-    end
-  appointmentList.push(appointmentObj)
-  end 
-end
-
-     render json: {data: appointmentList}
-
-  end
 
   def create
 
-puts appointment_params
-  @appointment = Appointment.new(appointment_params)
 
-  doctors = Doctor.all
-  patients = Patient.all
-  appointmentObj = {
-  patient: {name: patients[@appointment.patient_id].name},
-  doctor: {id: @appointment.doctor_id},
-  start_time: @appointment.start_time,
-  duration_in_minutes: 50
-  }
+  @appointment = Appointment.new(appointment_params) #creates a new appointment from the entered appointment params
+
+      
+      patients = Patient.all #creates array of all doctors
+      appointmentObj = { #creates response object as specified in requirements and sets that objects keys to equal the correct values
+      patient: {name: patients[@appointment.patient_id].name}, 
+      doctor: {id: @appointment.doctor_id}, 
+      start_time: @appointment.start_time,
+      duration_in_minutes: 50
+      }
 
  
-    if @appointment.save
+    if @appointment.save #checks if request was successful and if new appointment was saved to database
 
-
-      render json: {data: appointmentObj}
+      render json: {data: appointmentObj} #returns response object
     else
-      render json: appointment.errors.full_messages, status: 422
+      render json: appointment.errors.full_messages, status: 422 #returns error message
     end
   end
 
   private
 
-  def appointment_params 
+  def appointment_params #defines what params may be entered to create a new appointment
     params.require(:appointment).permit(:patient_id, :doctor_id, :start_time, :duration_in_minutes)
   end
 end
