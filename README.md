@@ -16,19 +16,19 @@ you can then go to your localhost in browser or whatever other program you wish 
 requirement 1: code for seeds can be found in the db/seeds.rb rile
 ```
 ```
-requirement 2: enter localhost:3000/api/appointments as a GET request 
+requirement 2: enter localhost:3000/api/appointments as a GET request code may be found in app/controllers/api/appointments.rb
 ```
 ```
-requirement 3: enter localhost:3000/api/appointments and then add the following tags at the end as a GET request
+requirement 3: enter localhost:3000/api/appointments and then add the following tags at the end as a GET request code may be found in app/controllers/api/appointments.rb
 ?past=1
 ?past=0
 ?length=5&page=1
 ```
 ```
-requirement 4:localhost:3000/api/doctors as a GET request 
+requirement 4:localhost:3000/api/doctors as a GET request code may be found in app/controllers/api/doctors.rb
 ```
 ```
-requirement 5: localhost:3000/api/appointments as a POST request 
+requirement 5: localhost:3000/api/appointments as a POST request code may be found in app/controllers/api/appointments.rb
 ```
 in the images folder I added images from my results of each of these test
 
