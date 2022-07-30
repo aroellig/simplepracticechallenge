@@ -3,12 +3,14 @@ Andrew Roellig notes
 These are instructions on how I tested my code and what to exect.
 to start the app, make sure you have downloaded docker and have it running on your desktop
 then run these commands in the following order
+```
 docker-compose build app
 docker-compose run --rm app bundle install
 docker-compose run --rm app bundle exec rails db:create db:schema:load
 docker-compose run --rm app bundle exec rails db:seed
 docker-compose run --rm -e RAILS_ENV=test app bundle exec rails db:migrate
 docker-compose up -d
+```
 you can then go to your localhost in browser or whatever other program you wish to test it. I used my browser and the http vs code extension to test my routes
 requirement 1: code for seeds can be found in the db/seeds.rb rile
 requirement 2: enter localhost:3000/api/appointments as a GET request 
