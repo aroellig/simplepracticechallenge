@@ -19,6 +19,7 @@ requirement 3: enter localhost:3000/api/appointments and then add the following 
 requirement 4:localhost:3000/api/doctors as a GET request 
 requirement 5L localhost:3000/api/appointments as a POST request 
 below are images from my test to show my results from each one
+1. 
 
 SimplePractice Programming Test
 =======================
