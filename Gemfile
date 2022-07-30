@@ -10,7 +10,7 @@ gem "config"
 # Core
 gem "pg"
 gem "puma", "~> 3.11"
-gem "rails", "~> 6.0.3"
+gem "rails", "~> 6.0.4.4"
 gem "bootsnap", ">= 1.4.2", require: false
 
 group :development, :test do

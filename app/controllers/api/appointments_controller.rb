@@ -1,7 +1,8 @@
 class Api::AppointmentsController < ApplicationController
   def index
 
-   
+
+@appointment = Appointment.new
     appointments = Appointment.all
     doctors = Doctor.all
     patients = Patient.all
@@ -132,21 +133,24 @@ end
   end
 
   def create
-    # TODO:
-  appointment = Appointment.new(appointment_params)
-  appointmentObj = {
-  patient: '',
-  doctor: '',
-  start_time: '',
-  duration_in_minutes: 50
-  }
+
+puts appointment_params
+  @appointment = Appointment.new(appointment_params)
+
   doctors = Doctor.all
   patients = Patient.all
-    if appointment.save
-      appointmentObj['start_time'] = appointment.start_time
-      appointmentObj["doctor"] = { id: appointment.doctor_id}
-      appointmentObj["patient"] = {name: patients[patient_id].name}
-      render json: {message: 'success', data: appointmentObj}
+  appointmentObj = {
+  patient: {name: patients[@appointment.patient_id].name},
+  doctor: {id: @appointment.doctor_id},
+  start_time: @appointment.start_time,
+  duration_in_minutes: 50
+  }
+
+ 
+    if @appointment.save
+
+
+      render json: {data: appointmentObj}
     else
       render json: appointment.errors.full_messages, status: 422
     end
@@ -155,6 +159,6 @@ end
   private
 
   def appointment_params 
-    params.permit(:patient_id, :doctor_id, :start_time, :duration_in_minutes)
+    params.require(:appointment).permit(:patient_id, :doctor_id, :start_time, :duration_in_minutes)
   end
 end
