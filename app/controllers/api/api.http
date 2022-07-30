@@ -1,11 +1,12 @@
 POST http://localhost:3000/api/appointments
+
 Content-Type: application/json
 
 {
-    "appointment":{
+    
     "patient_id": 12,
     "doctor_id": 2,
     "duration_in_minutes": 50,
     "start_time": "2022-07-18T00:00:00.000Z"
-    }
+    
 }

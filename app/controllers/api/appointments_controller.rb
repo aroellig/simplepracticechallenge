@@ -1,8 +1,6 @@
 class Api::AppointmentsController < ApplicationController
   def index
-
-
-
+    
     appointments = Appointment.all # selects appointents array
     doctors = Doctor.all #selects doctors array
     patients = Patient.all # selects patients array
@@ -37,6 +35,7 @@ class Api::AppointmentsController < ApplicationController
           end
         appointmentList.push(appointmentObj) # adds the appointment obj to the appointmentList
         end 
+  
       end
     elsif params["past"] == "0" #checks for a query param equal to 0
       appointments.each do |appointment| #iterates over each appointment
@@ -69,6 +68,7 @@ class Api::AppointmentsController < ApplicationController
         end 
       end
     elsif params["page"] != nil #checks for pagination to see in a page query param exist and if so the following code is performed
+      if params["page"].to_i * params["length"].to_i < appointments.length #checks to make sure that database can be paginated under entered parameters
       last = (params["page"].to_i * params["length"].to_i) - 1 #sets the last index of appointments user wants
       first = (last - params["length"].to_i) + 1 #sets the first index of appointments user wants to see
       appointments[first..last].each do |appointment| #selects appointments from the first index to the last index
@@ -98,7 +98,7 @@ class Api::AppointmentsController < ApplicationController
           end
         appointmentList.push(appointmentObj)
         end 
-   
+      end
 
       else
         # assumes no query params so user wants a list of all 100 appoinments
@@ -130,26 +130,29 @@ class Api::AppointmentsController < ApplicationController
             appointmentList.push(appointmentObj)
             end 
           end
-
-              render json: {data: appointmentList}
-
+         if appointmentList.length > 0 #checks if there was pagination and if so was it successful
+          render json: {data: appointmentList}
+          elsif  params["page"].to_i * params["length"].to_i > appointments.length
+            render json: {message: 'page could not be paginated'}
+          end
       end
-
+ 
   def create
+  params = {
+    "patient_id": 12,
+    "doctor_id": 2,
+    "duration_in_minutes": 50,
+    "start_time": "2022-07-18T00:00:00.000Z"
+}
 
-
-  @appointment = Appointment.new(appointment_params) #creates a new appointment from the entered appointment params
-
-      
-      patients = Patient.all #creates array of all doctors
+  @appointment = Appointment.new(params) #creates a new appointment from the entered appointment params
+      patients = Patient.all #creates array of all patients
       appointmentObj = { #creates response object as specified in requirements and sets that objects keys to equal the correct values
       patient: {name: patients[@appointment.patient_id].name}, 
       doctor: {id: @appointment.doctor_id}, 
       start_time: @appointment.start_time,
       duration_in_minutes: 50
       }
-
- 
     if @appointment.save #checks if request was successful and if new appointment was saved to database
 
       render json: {data: appointmentObj} #returns response object
@@ -158,9 +161,10 @@ class Api::AppointmentsController < ApplicationController
     end
   end
 
+
   private
 
   def appointment_params #defines what params may be entered to create a new appointment
-    params.require(:appointment).permit(:patient_id, :doctor_id, :start_time, :duration_in_minutes)
+    params.permit(:patient_id, :doctor_id, :start_time, :duration_in_minutes)
   end
 end
