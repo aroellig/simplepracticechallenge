@@ -30,7 +30,7 @@ requirement 4:localhost:3000/api/doctors as a GET request
 ```
 requirement 5: localhost:3000/api/appointments as a POST request 
 ```
-below are images from my test to show my results from each one
+in the images folder I added images from my results of each of these test
 
 
 SimplePractice Programming Test
