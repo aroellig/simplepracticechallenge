@@ -29,8 +29,9 @@ requirement 4:localhost:3000/api/doctors as a GET request
 ```
 ```
 requirement 5: localhost:3000/api/appointments as a POST request 
-below are images from my test to show my results from each one
 ```
+below are images from my test to show my results from each one
+
 
 SimplePractice Programming Test
 =======================
